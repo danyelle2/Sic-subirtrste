@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MotionPy - Plataforma de Ensino de Libras</title>
+    
+    <!-- TensorFlow.js e Teachable Machine -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+   
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+    <!--V libras-->
+    <div vw class="enabled">
+        <div vw-access-button class="active"></div>
+        <div vw-plugin-wrapper>
+            <div class="vw-plugin-top-wrapper"></div>
+        </div>
+    </div>
+    
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    
+    <script>
+        new window.VLibras.Widget('https://vlibras.gov.br/app');
+    </script>
+    <!-- Header -->
+   <header>
+    <div class="container">
+        <div class="header-content">
+            <a href="#" class="logo">
+                <img src="imagens/logo.png" alt="MotionPy Logo">
+                <span>MotionPy</span>
+            </a>
+            
+            <nav>
+                <ul>
+                    <li><a href="#" class="nav-link active" data-page="home">Início</a></li>
+                    <li><a href="#" class="nav-link" data-page="tutorial">Tutoriais</a></li>
+                    <li><a href="#" class="nav-link" data-page="practice">Praticar</a></li>
+                    <li><a href="#" class="nav-link" data-page="history">Histórico</a></li>
+                    <li><a href="#" class="nav-link" data-page="profile" id="profile-nav-link" style="display: none;">Meu Perfil</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <label class="theme-toggle">
+                    <input type="checkbox" id="dark-mode-toggle">
+                    <span class="theme-slider"> </span>
+                </label>
+                <button class="btn btn-secondary" id="login-btn">
+                    <i class="fas fa-user"></i>
+                    Entrar
+                </button>
+                <button class="btn btn-outline" id="logout-btn" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Sair
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+    <main class="container">
+        
+                <!-- Pgina Inicial -->
+        <section id="home-page" class="page active">
+            <div class="hero">
+                <h1 class="hero-title">Aprenda <span>Libras</span> de Forma Interativa</h1>
+                <p class="hero-subtitle">Pratique sinais com feedback em tempo real usando reconhecimento de gestos</p>
+                <button class="btn btn-primary" id="start-learning-btn">
+                    Começar Agora
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card card">
+                    <div class="stat-value" id="total-signs">9</div>
+                    <div class="stat-label">Sinais Disponíveis</div>
+                </div>
+                <div class="stat-card card">
+                    <div class="stat-value" id="completed-signs">0</div>
+                    <div class="stat-label">Sinais Concluídos</div>
+                </div>
+                <div class="stat-card card">
+                    <div class="stat-value" id="accuracy-rate">0%</div>
+                    <div class="stat-label">Taxa de Acerto</div>
+                </div>
+                <div class="stat-card card">
+                    <div class="stat-value" id="practice-time">0h</div>
+                    <div class="stat-label">Tempo de Prática</div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2 class="section-title">Categorias de Sinais</h2>
+                <p class="section-subtitle">Escolha uma categoria para começar a praticar</p>
+            </div>
+
+         <div class="categories-grid" id="categories-grid">
+    <!-- Categorias serão carregadas via JavaScript -->
+</div>
+
+<!-- Seção de Dúvidas Frequentes -->
+            <div class="faq-section">
+            <h2>Dúvidas Frequentes</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <button class="faq-question">Para quem é destinada esta aplicação?</button>
+                    <div class="faq-answer">
+                        <p>Ela é destinada a todos os ouvintes que tenham interesse em ter um primeiro contato com a Língua Brasileira de Sinais e desejam aprender o básico.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">Como começar a usar a aplicação?</button>
+                    <div class="faq-answer">
+                        <p>Acesse a seção “Tutoriais” para aprender como realizar os gestos. Depois, vá para a parte de prática e teste se você realmente aprendeu. Nessa etapa, haverá a correção da configuração da mão.
+Para ter acesso ao tempo de uso na plataforma, histórico e desbloqueio de novos módulos, é necessário realizar o cadastro e fazer login.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">Dá para usar a plataforma no celular?</button>
+                    <div class="faq-answer">
+                        <p>Sim! Você consegue acessar, mas é preciso usar a versão para computador.
+Para isso, toque nos três pontos no canto superior do navegador e selecione “Versão para computador” ou “Versão desktop”.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">Não consigo acessar a câmera, o que fazer?</button>
+                    <div class="faq-answer">
+                        <p>Verifique se o seu navegador tem permissão para acessar a câmera. Caso não tenha, selecione a opção "Permitir"</p>
+                    </div>
+                </div>
+
+                  <div class="faq-item">
+                    <button class="faq-question">Como utilizo a página de prática?</button>
+                    <div class="faq-answer">
+                        <p>Selecione a categoria e o sinal desejado, ative a câmera e aguarde a análise automática. O catálogo V-LIBRASIL oferece vídeos de referência; a correção depende das classes presentes no modelo carregado.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">Consigo mudar o tema da página?</button>
+                    <div class="faq-answer">
+                        <p>Sim. Para ativar o tema escuro, selecione o ícone da lua na barra superior da tela.
+Para voltar ao tema claro, selecione o ícone do sol.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">O curso oferece certificado?</button>
+                    <div class="faq-answer">
+                        <p>Sim! Para receber o certificado, é necessário concluir todos os módulos do curso e também a parte teórica.
+A certificação é de curso livre, com carga horária de 40h, assinada pela pedagoga responsável, Danyelle A. Brito, formada pela instituição Unicid.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">A plataforma tem algum custo?</button>
+                    <div class="faq-answer">
+                        <p>Não, a plataforma é completamente gratuita</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">Sua dúvida não está aqui?</button>
+                    <div class="faq-answer">
+                        <p>Entre em contato com a gente pelos nossos canais de atendimento. Assim, podemos ajudar você com mais precisão.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Página de Prática -->
+        <section id="practice-page" class="page">
+            <div class="section-header">
+                <h2 class="section-title">Praticar Sinais</h2>
+                <p class="section-subtitle">Use sua câmera para praticar e receber feedback em tempo real</p>
+            </div>
+
+            <div class="practice-container">
+                <div class="video-container card">
+                    <video id="video" autoplay playsinline></video>
+                    <canvas id="canvas"></canvas>
+                    <div class="video-overlay" id="video-overlay">
+                        <i class="fas fa-camera-slash"></i>
+                        <p>Câmera não iniciada</p>
+                        <button class="btn btn-primary" id="enable-camera-btn">Ativar Câmera</button>
+                    </div>
+                </div>
+
+                <div class="practice-controls">
+                    <div class="card">
+                        <div class="form-group">
+                            <label for="category-select" class="form-label">Categoria</label>
+                            <select id="category-select" class="form-select">
+                                <option value="">Selecione uma categoria</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sign-select" class="form-label">Palavra ou sinal disponível</label>
+                            <select id="sign-select" class="form-select" disabled>
+                                <option value="">Selecione um sinal</option>
+                            </select>
+                        </div>
+
+                        <!-- ESTRUTURA ÚNICA QUE SERÁ ATUALIZADA -->
+                    <div class="vogais" id="current-sign-info" style="display: none;">
+                        <h3 class="sign-name" id="current-sign-name">Nome do Sinal</h3>
+                        <p class="sign-description" id="current-sign-description">Descrição do sinal</p>
+                        <div class="sign-preview">
+                            <img src="" alt="Demonstração do sinal" class="sign-video" id="sign-image">
+                            <video id="sign-reference-video" class="sign-video" controls playsinline preload="metadata" hidden></video>
+                        </div>
+                    </div>
+
+                        <div class="feedback-container">
+                            <div class="feedback hidden" id="feedback">
+                                <i class="fas fa-check-circle"></i>
+                                <span id="feedback-text">Parabéns! Sinal correto.</span>
+                            </div>
+                        </div>
+
+                        <div class="progress-container">
+                            <div class="progress-header flex-between">
+                                <span>Progresso</span>
+                                <span id="progress-text">0/0</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-bar" style="width: 33%"></div>
+                            </div>
+                        </div>
+
+                        <div class="actions-grid">
+                            <button class="btn btn-outline" id="stop-camera-btn" type="button" disabled>
+                                <i class="fas fa-video-slash"></i>
+                                Desativar Câmera
+                            </button>
+                            <button class="btn btn-outline" id="back-home-btn">
+                                <i class="fas fa-home"></i>
+                                Voltar
+                            </button>
+                        </div>
+                        <p class="camera-status" id="camera-status" role="status">Ative a câmera para começar a análise automática.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Página de Histórico -->
+        <section id="history-page" class="page">
+            <div class="section-header">
+                <h2 class="section-title">Histórico de Desempenho</h2>
+                <p class="section-subtitle">Acompanhe seu progresso e evolução</p>
+            </div>
+
+            <div class="card">
+                <div class="history-filters">
+                    <div class="form-group">
+                        <label for="history-filter" class="form-label">Filtrar por</label>
+                        <select id="history-filter" class="form-select">
+                            <option value="all">Todos os Sinais</option>
+                            <option value="completed">Sinais Concluídos</option>
+                            <option value="pending">Sinais Pendentes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="date-filter" class="form-label">Período</label>
+                        <select id="date-filter" class="form-select">
+                            <option value="all">Todo o período</option>
+                            <option value="week">Última semana</option>
+                            <option value="month">Último mês</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Sinal</th>
+                                <th>Categoria</th>
+                                <th>Acertos</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body">
+                            <!-- Dados serão carregados via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button class="btn btn-outline" id="back-from-history">
+                    <i class="fas fa-arrow-left"></i>
+                    Voltar ao Início
+                </button>
+            </div>
+        </section>
+
+        <!-- Página de Tutoriais -->
+        <section id="tutorial-page" class="page">
+            <div class="section-header">
+                <h2 class="section-title">Tutoriais de Sinais</h2>
+                <p class="section-subtitle">Aprenda com vídeos e instruções detalhadas</p>
+            </div>
+
+            <div class="tutorials-grid">
+                <div class="tutorials-sidebar card">
+                    <h3>Categorias</h3>
+                    <ul class="tutorials-list" id="tutorials-list">
+                        <!-- Lista de tutoriais será carregada via JavaScript -->
+                    </ul>
+                </div>
+
+                <div class="tutorial-content card">
+                    <div id="tutorial-placeholder">
+                        <div class="text-center">
+                            <i class="fas fa-video" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                            <h3>Selecione um tutorial</h3>
+                            <p>Escolha uma categoria ao lado para ver os tutoriais disponíveis</p>
+                        </div>
+                    </div>
+
+                    <div id="tutorial-detail" style="display: none;">
+                        <h3 id="tutorial-title">Letra A</h3>
+                        <p id="tutorial-description" class="text-muted">Sinal para a letra A em Libras</p>
+                        
+                        <div class="tutorial-video-container">
+                            <video controls class="tutorial-video" id="tutorial-video">
+                                <source src="#" type="video/mp4">
+                                Seu navegador não suporta o elemento de vídeo.
+                            </video>
+                        </div>
+
+                        <div class="tutorial-steps">
+                            <h4>Passos para executar o sinal:</h4>
+                            <div class="tutorial-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Posição inicial</h4>
+                                    <p>Mantenha a mão relaxada ao lado do corpo</p>
+                                </div>
+                            </div>
+                            <div class="tutorial-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Forma da mão</h4>
+                                    <p>Feche a mão em forma de punho, com o polegar sobre os dedos</p>
+                                </div>
+                            </div>
+                            <div class="tutorial-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Movimento</h4>
+                                    <p>Levante a mão até a altura do peito, mantendo a forma</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button class="btn btn-outline" id="back-from-tutorial">
+                    <i class="fas fa-arrow-left"></i>
+                    Voltar ao Início
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de Login -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Entrar na Plataforma</h3>
+                <button class="modal-close" id="close-login-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email" class="form-label">E-mail</label>
+                    <input type="email" id="login-email" class="form-input" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password" class="form-label">Senha</label>
+                    <input type="password" id="login-password" class="form-input" placeholder="Sua senha" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Entrar
+                </button>
+            </form>
+            <div class="text-center mt-3">
+                <p>Não tem uma conta? <a href="#" id="show-register">Cadastre-se</a></p>
+            </div>
+        </div>
+    </div>    
+                 <!-- Modal de Cadastro -->
+<div class="modal" id="register-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Criar Conta</h3>
+            <button class="modal-close" id="close-register-modal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form id="register-form">
+           <form id="register-form">
+            <div class="form-group">
+                <label for="register-name" class="form-label">Nome Completo</label>
+                <input type="text" id="register-name" class="form-input" placeholder="Seu nome completo" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="register-dob" class="form-label">Data de Nascimento</label>
+                <input type="date" id="register-dob" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+                <label for="register-email" class="form-label">E-mail</label>
+                <input type="email" id="register-email" class="form-input" placeholder="seu@email.com" required>
+            </div>
+            <div class="form-group">
+                <label for="register-password" class="form-label">Senha</label>
+                <input type="password" id="register-password" class="form-input" placeholder="Crie uma senha" required>
+            </div>
+            <div class="form-group">
+                <label for="register-confirm" class="form-label">Confirmar Senha</label>
+                <input type="password" id="register-confirm" class="form-input" placeholder="Confirme sua senha" required>
+            </div>
+            
+            <!-- Checkbox de aceitação -->
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="accept-terms" required>
+                    Li e concordo com a <a href="privacidade.html" target="_blank">Política de Privacidade</a> 
+                    e <a href="termos.html" target="_blank">Termos de Uso</a>
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+                <i class="fas fa-user-plus"></i>
+                Criar Conta
+            </button>
+        </form>
+        <div class="text-center mt-3">
+            <p>Já tem uma conta? <a href="#" id="show-login">Faça login</a></p>
+        </div>
+    </div>
+</div>
+
+            
+<!-- Página de Perfil -->
+<section id="profile-page" class="page">
+    <div class="section-header">
+        <h2 class="section-title">Meu Perfil</h2>
+        <p class="section-subtitle">Gerencie suas informações pessoais</p>
+    </div>
+
+    <div class="profile-container">
+        <div class="card">
+            <form id="profile-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="profile-name" class="form-label">Nome Completo *</label>
+                        <input type="text" id="profile-name" class="form-input" placeholder="Seu nome completo" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="profile-cpf" class="form-label">CPF</label>
+                        <input type="text" id="profile-cpf" class="form-input" placeholder="000.000.000-00" maxlength="14">
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-dob" class="form-label">Data de Nascimento *</label>
+                        <input type="date" id="profile-dob" class="form-input" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="profile-gender" class="form-label">Gênero</label>
+                        <select id="profile-gender" class="form-select">
+                            <option value="">Selecione</option>
+                            <option value="feminino">Feminino</option>
+                            <option value="masculino">Masculino</option>
+                            <option value="outro">Outro</option>
+                            <option value="prefiro_nao_informar">Prefiro não informar</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-phone" class="form-label">Telefone</label>
+                        <input type="tel" id="profile-phone" class="form-input" placeholder="(11) 99999-9999">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="profile-email" class="form-label">E-mail *</label>
+                    <input type="email" id="profile-email" class="form-input" placeholder="seu@email.com" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" id="back-from-profile">
+                        <i class="fas fa-arrow-left"></i>
+                        Voltar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Salvar Alterações
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>MotionPy</h3>
+                    <p>Plataforma interativa para o ensino de Libras com reconhecimento de gestos em tempo real.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Institucional</h3>
+                    <ul class="footer-links">
+                        <li><a href="termos.html" data-page="termos">Termos de uso</a></li>
+                        <li><a href="privacidade.html" data-page="privacidade">Política de privacidade</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Contato</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope"></i> contato@motionpy.com</li>
+                        <li><i class="fas fa-phone"></i> (11) 94625-9797 </li>
+                        <li><i class="fas fa-map-marker-alt"></i> São Paulo, SP</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MotionPy. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Avatar de Assistente Virtual -->
+<!-- Chatbot Assistente LIBRAS com Gemini -->
+<div id="chatbot-container">
+    <!-- Botão Flutuante -->
+    <button id="chatToggleBtn" class="chat-toggle-btn">
+        <span class="chat-tip-bubble">Precisa de ajuda?</span>
+        <i class="fas fa-comments" id="chatIcon"></i>
+    </button>
+
+    <!-- Container do Chat -->
+    <div id="chatContainer" class="chat-container">
+        <div class="chat-header">
+            <h2>
+                <i class="fas fa-sign-language"></i>
+                Assistente MotionPy IA
+            </h2>
+            <button id="closeChatBtn" class="close-chat-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Área de Mensagens -->
+        <div id="chatMessages" class="chat-messages">
+            <div class="message assistant-message">
+                <div class="message-bubble">
+                    <p>👋 <strong>Olá! Sou o assistente IA do MotionPy</strong></p>
+                    <p>Posso te ajudar com:</p>
+                    <ul>
+                        <li>🤲 <strong>Sinais de LIBRAS</strong> - Explicações e demonstrações</li>
+                        <li>📚 <strong>Tutoriais</strong> - Como usar cada funcionalidade</li>
+                        <li>📊 <strong>Seu progresso</strong> - Acompanhamento e métricas</li>
+                    </ul>
+                    <p>Pergunte qualquer coisa sobre LIBRAS ou a plataforma!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input do Chat -->
+        <div class="chat-input-container">
+            <input type="text" id="chatInput" placeholder="Pergunte sobre LIBRAS ou a plataforma...">
+            <button id="sendBtn" class="send-button">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+
+        <!-- Sugestões Rápidas -->
+        <div class="chat-suggestions">
+            <button class="suggestion-btn" data-question="Quais sinais posso aprender agora?">
+                👐 Sinais disponíveis
+            </button>
+            <button class="suggestion-btn" data-question="Como vejo meu progresso?">
+                📊 Meu progresso
+            </button>
+        </div>
+    </div>
+</div>
+    <script src="script.js"></script>
+</body>
+</html>
