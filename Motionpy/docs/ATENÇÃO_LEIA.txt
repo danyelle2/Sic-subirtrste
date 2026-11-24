@@ -1,0 +1,27 @@
+MotionPy — catálogo e prática com câmera
+
+Como iniciar
+1. Instale o Python 3.
+2. No terminal, acesse a pasta raiz deste projeto.
+3. Execute: python server.py
+4. Abra http://127.0.0.1:8000 em um navegador e permita o acesso à câmera.
+
+Também é possível executar python server.py dentro da pasta frontend.
+Mantenha o terminal aberto enquanto usa a aplicação.
+
+O servidor local lê as anotações em
+backend/Treinamento_llm_motionpy/videos UFPE (V-LIBRASIL)/annotations.csv,
+os vídeos na pasta data desse diretório e os pesos em backend/modelo_js.
+Abra o site pelo servidor; o acesso via
+file:// não habilita o catálogo nem a câmera.
+
+Limite importante do modelo
+O catálogo tem 1.364 classes nas anotações. O modelo TensorFlow.js instalado
+reconhece somente as classes presentes em backend/modelo_js/metadata.json
+(atualmente 10). Os demais sinais podem ser pesquisados e praticados com os
+vídeos de referência, mas não recebem correção automática até que o modelo
+seja treinado/exportado para essas classes. O conjunto contém 4.086 vídeos;
+algumas anotações não têm o arquivo de vídeo local correspondente.
+
+O servidor escuta apenas em 127.0.0.1; não o exponha publicamente sem revisar
+licença e permissões do conjunto de dados.
