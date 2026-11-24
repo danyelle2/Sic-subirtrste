@@ -1,0 +1,8 @@
+motionpy/
+├── 📁 database/
+│   ├── 📄 __init__.py         # Inicialização do pacote
+│   ├── 📄 config.py           # Configuração da conexão
+│   ├── 📄 models.py           # Estrutura das tabelas
+│   └── 📄 init_database.py    # Script para criar o banco
+├── 📄 requirements_db.txt     # Dependências
+└── 📄 queries.sql            # Consultas SQL (opcional)
